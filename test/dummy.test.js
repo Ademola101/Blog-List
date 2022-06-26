@@ -5,4 +5,4 @@ test('dummy returns one', () => {
 
   const result = dummy(blogs);
   expect(result).toBe(1);
-})
+});
