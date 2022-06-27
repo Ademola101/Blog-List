@@ -1,19 +1,19 @@
 const { totalLikes } = require('../utils/list_helper');
+const { oneBlog, zeroBlog, manyBlog } = require('./blog_post');
 
 describe('total likes', () => {
-  const listWithOneBlog = [
-    {
-      _id: '5a422aa71b54a676234d17f8',
-      title: 'Go To Statement Considered Harmful',
-      author: 'Edsger W. Dijkstra',
-      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-      likes: 5,
-      __v: 0,
-    },
-  ];
-
   test('when the list has only one blog, total likes equals to that', () => {
-    const result = totalLikes(listWithOneBlog);
+    const result = totalLikes(oneBlog);
     expect(result).toBe(5);
+  });
+
+  test('should return 0 for list with no blog', () => {
+    const result = totalLikes(zeroBlog);
+    expect(result).toBe(0);
+  });
+
+  test('should return the sum of likes for list with many blogs', () => {
+    const result = totalLikes(manyBlog);
+    expect(result).toBe(36);
   });
 });
