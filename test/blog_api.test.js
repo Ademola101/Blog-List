@@ -4,7 +4,7 @@ const app = require('../app');
 const Blog = require('../models/Blog');
 
 const api = supertest(app);
-const { manyBlog, oneBlog } = require('./blog_post');
+const { manyBlog, oneBlogObj } = require('./blog_post');
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -27,7 +27,7 @@ test('a unique identifier id exist', async () => {
 }, 100000);
 
 test('a new blog created successfully', async () => {
-  await api.post('/api/blog').send(oneBlog).expect(201).expect('Content-Type', /application\/json/);
+  await api.post('/api/blog').send(oneBlogObj).expect(201).expect('Content-Type', /application\/json/);
   const blogs = await api.get('/api/blog');
   expect(blogs.body).toHaveLength(manyBlog.length + 1);
 }, 100000);
@@ -46,6 +46,14 @@ test('no likes property return 0', async () => {
   const blogs = await Blog.find({});
 
   expect(blogs.at(-1).likes).toBe(0);
+}, 100000);
+
+test('blog with no title and url return 400 Bad request', async () => {
+  const noTitle = {
+    author: 'ademola',
+    likes: 3,
+  };
+  await api.post('/api/blog').send(noTitle).expect(400);
 }, 100000);
 
 afterAll(() => {
