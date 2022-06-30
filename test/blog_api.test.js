@@ -13,4 +13,10 @@ beforeEach(async () => {
 
 test('return all blog in json', async () => {
   await api.get('/api/blog').expect(200).expect('Content-Type', /application\/json/);
+  const response = await api.get('/api/blog');
+  expect(response.body).toHaveLength(manyBlog.length);
+}, 100000);
+
+afterAll(() => {
+  mongoose.connection.close();
 });
