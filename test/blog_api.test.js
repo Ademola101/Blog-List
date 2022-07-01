@@ -56,17 +56,18 @@ test('blog with no title and url return 400 Bad request', async () => {
   await api.post('/api/blog').send(noTitle).expect(400);
 }, 100000);
 
-describe('note delete', () => {
+describe('blog delete', () => {
   test('succesful with 204 no content', async () => {
-    const blogAtStart = await blogsInDb();
+    const blogAtStart = await Blog.find({});
     const noteToBeDeleted = blogAtStart[0];
+    
     await api.delete(`/api/blog/${noteToBeDeleted.id}`).expect(204);
-    console.log(noteToBeDeleted);
     const blogAtEnd = await blogsInDb();
     expect(blogAtEnd).toHaveLength(manyBlog.length - 1);
   }, 100000);
 });
 
+describe('blog update', () => { second })
 afterAll(() => {
   mongoose.connection.close();
 });
