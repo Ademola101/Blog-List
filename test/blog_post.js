@@ -1,5 +1,6 @@
-const zeroBlog = [];
+const Blog = require('../models/Blog');
 
+const zeroBlog = [];
 const oneBlog = [{
   _id: '5a422aa71b54a676234d17f8',
   title: 'Go To Statement Considered Harmful',
@@ -67,8 +68,14 @@ const manyBlog = [{
   __v: 0,
 }];
 
+const blogsInDb = async () => {
+  const blogs = await Blog.find({});
+  return blogs.map((blog) => blog.toJSON);
+};
+
 module.exports = {
   oneBlog,
+  blogsInDb,
   zeroBlog,
   manyBlog,
   oneBlogObj,

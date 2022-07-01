@@ -4,7 +4,7 @@ const app = require('../app');
 const Blog = require('../models/Blog');
 
 const api = supertest(app);
-const { manyBlog, oneBlogObj } = require('./blog_post');
+const { manyBlog, oneBlogObj, blogsInDb } = require('./blog_post');
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -55,6 +55,17 @@ test('blog with no title and url return 400 Bad request', async () => {
   };
   await api.post('/api/blog').send(noTitle).expect(400);
 }, 100000);
+
+describe('note delete', () => {
+  test('succesful with 204 no content', async () => {
+    const blogAtStart = await blogsInDb();
+    const noteToBeDeleted = blogAtStart[0];
+    await api.delete(`/api/blog/${noteToBeDeleted.id}`).expect(204);
+    console.log(noteToBeDeleted);
+    const blogAtEnd = await blogsInDb();
+    expect(blogAtEnd).toHaveLength(manyBlog.length - 1);
+  }, 100000);
+});
 
 afterAll(() => {
   mongoose.connection.close();
