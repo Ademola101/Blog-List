@@ -60,14 +60,23 @@ describe('blog delete', () => {
   test('succesful with 204 no content', async () => {
     const blogAtStart = await Blog.find({});
     const noteToBeDeleted = blogAtStart[0];
-    
+
     await api.delete(`/api/blog/${noteToBeDeleted.id}`).expect(204);
     const blogAtEnd = await blogsInDb();
     expect(blogAtEnd).toHaveLength(manyBlog.length - 1);
   }, 100000);
 });
 
-describe('blog update', () => { second })
+describe('blog update', () => {
+  test('sucess update return 200 OK', async () => {
+    const newNote = {
+      likes: 27,
+    };
+    const blogAtStart = await Blog.find({});
+    const noteToBeUpdate = blogAtStart[0];
+    await api.put(`/api/blog/${noteToBeUpdate.id}`).send(newNote).expect(200);
+  }, 100000);
+});
 afterAll(() => {
   mongoose.connection.close();
 });
