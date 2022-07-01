@@ -72,9 +72,12 @@ describe('blog update', () => {
     const newNote = {
       likes: 27,
     };
-    const blogAtStart = await Blog.find({});
+    const blogAtStart = await blogsInDb();
     const noteToBeUpdate = blogAtStart[0];
     await api.put(`/api/blog/${noteToBeUpdate.id}`).send(newNote).expect(200);
+    const blogsAtEnd = await blogsInDb();
+    const updatedNote = blogsAtEnd[0];
+    expect(updatedNote.likes).toBe(27);
   }, 100000);
 });
 afterAll(() => {
