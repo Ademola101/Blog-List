@@ -17,9 +17,14 @@ beforeEach(async () => {
     passwordHash,
   })
     .save();
-});
+}, 100000);
 
-describe('when user is created', () => {
+describe('when there is initially a user in the db', () => {
+  test('there is one user in the db', async () => {
+    const db = await userInDb();
+    expect(db).toHaveLength(1);
+    expect(db.map((d) => d.username)).toContain('ademola');
+  }, 100000);
   test('a valid user is added and return sucess code', async () => {
     const newUser = {
       username: 'newuser',
@@ -27,7 +32,29 @@ describe('when user is created', () => {
       name: 'newUser',
     };
 
-    await api.post('/api/users').send(newUser).expect(201);
+    await api.post('/api/users').send(newUser).expect(201).expect('Content-Type', /application\/json/);
+  }, 100000);
+
+  test('an user with no username attempt creation', async () => {
+    const noUsername = {
+      name: 'nousername',
+      password: '123456',
+    };
+
+    await api.post('/api/users').send(noUsername).expect(400);
+  });
+
+  test('password with length less than 3 is a bad request', async () => {
+    const badPassword = {
+      name: 'badpassword',
+      username: 'badpassword',
+      password: '12',
+    };
+    const userAtStart = await userInDb();
+
+    await api.post('/api/users').send(badPassword).expect(400);
+    const userAtEnd = await userInDb();
+    expect(userAtStart).toHaveLength(userAtEnd.length);
   }, 100000);
 });
 
