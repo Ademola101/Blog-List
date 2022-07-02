@@ -71,6 +71,7 @@ const manyBlog = [{
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
   return blogs.map((blog) => blog.toJSON());
+  // because res.json
 };
 
 module.exports = {
