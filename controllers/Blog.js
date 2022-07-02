@@ -36,8 +36,8 @@ blogRouter.post('/', async (req, res) => {
   const {
     title, author, url, likes, userId,
   } = req.body;
-  const user = await User.findById(userId);
-  
+  const user = await User.findOne();
+
   const newBlog = new Blog({
     title,
     author,
