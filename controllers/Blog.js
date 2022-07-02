@@ -1,4 +1,5 @@
 const blogRouter = require('express').Router();
+const User = require('../models/User');
 
 const Blog = require('../models/Blog');
 
@@ -31,22 +32,24 @@ blogRouter.get('/', async (req, res) => {
   res.json(blogs);
 });
 
-blogRouter.post('/', async (req, res, next) => {
+blogRouter.post('/', async (req, res) => {
   const {
-    title, author, url, likes,
+    title, author, url, likes, userId,
   } = req.body;
+  const user = await User.findById(userId);
+  
   const newBlog = new Blog({
     title,
     author,
     url,
     likes: likes === undefined ? 0 : likes,
+    user: user._id,
   });
-  try {
-    const savedBlog = await newBlog.save();
-    res.status(201).json(savedBlog);
-  } catch (error) {
-    next(error);
-  }
+
+  const savedBlog = await newBlog.save();
+  user.blogs = user.blogs.concat(savedBlog._id);
+  await user.save();
+  res.status(201).json(savedBlog);
 });
 
 module.exports = blogRouter;
