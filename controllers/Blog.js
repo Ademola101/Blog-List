@@ -28,13 +28,13 @@ blogRouter.delete('/:id', async (req, res, next) => {
 });
 
 blogRouter.get('/', async (req, res) => {
-  const blogs = await Blog.find({});
+  const blogs = await Blog.find({}).populate('user', {username: 1, id: 1});
   res.json(blogs);
 });
 
 blogRouter.post('/', async (req, res) => {
   const {
-    title, author, url, likes, userId,
+    title, author, url, likes,
   } = req.body;
   const user = await User.findOne();
 
