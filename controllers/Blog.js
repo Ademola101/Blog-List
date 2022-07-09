@@ -12,7 +12,7 @@ blogRouter.put('/:id', async (req, res, next) => {
       likes,
       url,
     };
-    const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, updateBlog);
+    const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, updateBlog, { new: true });
     res.status(200).json(updatedBlog);
   } catch (error) {
     next(error);
